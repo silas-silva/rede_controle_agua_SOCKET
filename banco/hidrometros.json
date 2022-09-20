@@ -1,0 +1,27 @@
+{
+    "matri1": {
+        "ultimoConsumo": "0",
+        "consumoAtual": "0",
+        "bloqueado": "0"
+    },
+    "matri2": {
+        "ultimoConsumo": "0",
+        "consumoAtual": "0",
+        "bloqueado": "0"
+    },
+    "a": {
+        "ultimoConsumo": "0",
+        "consumoAtual": "0",
+        "bloqueado": "0"
+    },
+    "teste": {
+        "ultimoConsumo": "91",
+        "consumoAtual": "176",
+        "bloqueado": "1"
+    },
+    "tester": {
+        "ultimoConsumo": "0",
+        "consumoAtual": "0",
+        "bloqueado": "0"
+    }
+}
