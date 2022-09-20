@@ -1,11 +1,8 @@
 {
-    "teste@gmail.com": {
-        "senha": "a123"
+    "adm@gmail.com": {
+        "senha": "adm123"
     },
-    "silas@gmail.com": {
-        "senha": "a123"
-    },
-    "a": {
-        "senha": "a"
+    "teste": {
+        "senha": "teste"
     }
 }

@@ -1,27 +1,38 @@
 {
-    "matri1": {
-        "ultimoConsumo": "0",
-        "consumoAtual": "0",
-        "bloqueado": "0"
+    "1": {
+        "ultimoConsumo": "1732",
+        "consumoAtual": "1867",
+        "bloqueado": "0",
+        "vazando": "0"
     },
-    "matri2": {
-        "ultimoConsumo": "0",
-        "consumoAtual": "0",
-        "bloqueado": "0"
+    "2": {
+        "ultimoConsumo": "410",
+        "consumoAtual": "440",
+        "bloqueado": "0",
+        "vazando": "0"
     },
-    "a": {
+    "3": {
         "ultimoConsumo": "0",
         "consumoAtual": "0",
-        "bloqueado": "0"
+        "bloqueado": "0",
+        "Vazando": "0"
+    },
+    "4": {
+        "ultimoConsumo": "196",
+        "consumoAtual": "196",
+        "bloqueado": "0",
+        "vazando": "0"
+    },
+    "5": {
+        "ultimoConsumo": "0",
+        "consumoAtual": "0",
+        "bloqueado": "0",
+        "Vazando": "0"
     },
     "teste": {
-        "ultimoConsumo": "91",
-        "consumoAtual": "61",
-        "bloqueado": "1"
-    },
-    "tester": {
-        "ultimoConsumo": "0",
-        "consumoAtual": "0",
-        "bloqueado": "0"
+        "ultimoConsumo": "1256",
+        "consumoAtual": "1256",
+        "bloqueado": "0",
+        "vazando": "1"
     }
 }

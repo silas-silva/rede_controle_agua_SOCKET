@@ -33,6 +33,7 @@ def main():
 def validarCliente(client):
     # metodo para validar se o cliente existe na base de dados
     # Pedir matricula
+    print("===== Cliente =====")
     matricula = input('Matricula> ')
 
     while matricula == "":

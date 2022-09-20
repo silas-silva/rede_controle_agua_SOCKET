@@ -1,17 +1,20 @@
 {
-    "matri1": {
+    "1": {
+        "divida": "396"
+    },
+    "2": {
+        "divida": "540"
+    },
+    "3": {
         "divida": "0"
     },
-    "matri2": {
-        "divida": "0"
+    "4": {
+        "divida": "708"
     },
-    "a": {
+    "5": {
         "divida": "0"
     },
     "teste": {
-        "divida": "30"
-    },
-    "tester": {
-        "divida": "0"
+        "divida": "6"
     }
 }

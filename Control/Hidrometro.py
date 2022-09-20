@@ -41,7 +41,7 @@ def main():
 def validarHidrometro(client):
     # Metodo para validar se o hidrometro já existe na base de dados
     # Se existir, só pegar os dados, se não, criar um
-    
+    print("===== Hidrometro =====")
     matricula = input('Matricula> ')
 
     while matricula == "":
@@ -79,7 +79,16 @@ def receiveMessages(client):
             msg = client.recv(2048).decode(FORMAT)
             # hidroEstado
             #{"validar" : "Existe", "consumoAtual" : "-", "bloqueado" : "0"}
-            print(msg + '\n')
+            
+            # Precisa converter com o loads 2 vezes
+            msg = json.loads(msg)
+            msg = json.loads(msg)
+
+            if str(msg["bloqueado"]) == "0":
+                hidro.bloqueado = False
+            elif str(msg["bloqueado"]) == "1":
+                hidro.bloqueado = True
+            
             #Controlar Hidrometro por aqui
 
             # Fazer Opção de bloquear o hidrometro pelo dado vindo do servidor
@@ -97,6 +106,8 @@ def sendMessages(client, userName):
             # Sleep para esperar um tempo para receber a resposta do Receive Messages
             sleep(0.5)
             print("===============  MENU  ===================")
+            if hidro.bloqueado:
+                print(" -----  BLOQUEADO  -----")
             print(f" ===== CONSUMO TOTAL {hidro.consumo} M³ ======")
             print(f" ===== VAZÃO ATUAL {hidro.vazao} M³/S ======")
             print("[ 1 ] AUMETNAR VAZÃO EM 1 M³/S ")
@@ -118,21 +129,24 @@ def sendMessages(client, userName):
 def sendDataHidro(client):
     segundos = 0
     while True:
+        aviso = "0" #Sem vazamento
         try:
+            if hidro.vazao == 0 and hidro.bloqueado == False:
+                aviso = "1" #Vazamento
             sleep(1)
             if hidro.bloqueado == False:
                 hidro.consumo += hidro.vazao
             
             elif hidro.bloqueado == True:
                 # Quando o hidrometro bloqueado, mandar dados para o servidor de 3 em 3 segundos
-                sleep(3)
-                requisicao = 'PUT /madarDadosHidrometro { "matricula" : "_" , "novoConsumo" : "-"}'.replace("_", hidro.matricula).replace("-", str(hidro.consumo))
+                sleep(5)
+                requisicao = 'PUT /madarDadosHidrometro {"matricula" : "_" , "novoConsumo" : "-", "vazamento" : "$"}'.replace("_", hidro.matricula).replace("-", str(hidro.consumo)).replace("$", str(aviso))
                 segundos = 0 # Resetar os segundos
                 client.send(f'{requisicao}'.encode(FORMAT))
             
-            if segundos >= 5 and hidro.bloqueado == False:
+            if segundos >= 15 and hidro.bloqueado == False:
                 # de 10 em 10 segundos mandar os dados para o servidor caso o hidrometro não esteja bloqueado
-                requisicao = 'PUT /madarDadosHidrometro {"matricula" : "_" , "novoConsumo" : "-"}'.replace("_", hidro.matricula).replace("-", str(hidro.consumo))
+                requisicao = 'PUT /madarDadosHidrometro {"matricula" : "_" , "novoConsumo" : "-", "vazamento" : "$"}'.replace("_", hidro.matricula).replace("-", str(hidro.consumo)).replace("$", str(aviso))
                 segundos = 0 # Resetar os segundos
                 client.send(f'{requisicao}'.encode(FORMAT))
             

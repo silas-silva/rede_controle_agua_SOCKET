@@ -32,7 +32,7 @@ def main():
 def validarADM(client):
     # metodo para validar se o adm existe na base de dados
     # Pedir email e senha para o adm
-    
+    print("===== ADM =====")
     email = input('Email> ')
     
     while email == "":

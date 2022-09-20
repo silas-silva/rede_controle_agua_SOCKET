@@ -41,7 +41,7 @@ class Api:
         
         else:
             # Adicionar novo hidrometro
-            hidrometros[matricula.lower()] = {"ultimoConsumo" : "0", "consumoAtual" : "0", "bloqueado" : "0"}
+            hidrometros[matricula.lower()] = {"ultimoConsumo" : "0", "consumoAtual" : "0", "bloqueado" : "0", "vazando" : "0"}
             
             #Salvar alterações no banco
             with open("../banco/hidrometros.json", 'w' , encoding='utf-8') as database:
@@ -100,9 +100,12 @@ class Api:
             with open("../banco/clientes.json", 'r' , encoding='utf-8') as database:
                 clientes = json.load(database)
 
+            with open("../banco/hidrometros.json", 'r' , encoding='utf-8') as database:
+                hidrometros = json.load(database)
+
             if matricula in clientes:
                 divida = clientes[matricula]["divida"]
-                retorno = '{"validar" : "True", "Divida" : "-" }'.replace("-", str(divida))
+                retorno = '{"validar" : "True", "Divida" : "-", "vazando" : "_" }'.replace("-", str(divida)).replace("_", hidrometros[matricula]["vazando"])
                 return json.dumps(retorno)
             else:
                 return json.dumps('{ "validar" : "False" }')
@@ -126,7 +129,8 @@ class Api:
                 # bloquar hidrometro
                 uc = str(hidrometros[matricula.lower()]["ultimoConsumo"])
                 ca = str(hidrometros[matricula.lower()]["consumoAtual"])
-                hidrometros[matricula.lower()] = {"ultimoConsumo" : uc, "consumoAtual" : ca, "bloqueado" : "1"}
+                va = str(hidrometros[matricula.lower()]["vazando"])
+                hidrometros[matricula.lower()] = {"ultimoConsumo" : uc, "consumoAtual" : ca, "bloqueado" : "1", "vazando" : va}
             
                 #Salvar alterações no banco
                 with open("../banco/hidrometros.json", 'w' , encoding='utf-8') as database:
@@ -149,7 +153,8 @@ class Api:
                 # bloquar hidrometro
                 uc = str(hidrometros[matricula.lower()]["ultimoConsumo"])
                 ca = str(hidrometros[matricula.lower()]["consumoAtual"])
-                hidrometros[matricula.lower()] = {"ultimoConsumo" : uc, "consumoAtual" : ca, "bloqueado" : "0"}
+                va = str(hidrometros[matricula.lower()]["vazando"])
+                hidrometros[matricula.lower()] = {"ultimoConsumo" : uc, "consumoAtual" : ca, "bloqueado" : "0", "vazando" : va}
             
                 #Salvar alterações no banco
                 with open("../banco/hidrometros.json", 'w' , encoding='utf-8') as database:
@@ -198,12 +203,13 @@ class Api:
             uc = str(hidrometros[matricula.lower()]["ultimoConsumo"])
             ca = str(hidrometros[matricula.lower()]["consumoAtual"])
             bl = str(hidrometros[matricula.lower()]["bloqueado"])
+            va = str(hidrometros[matricula.lower()]["vazando"])
             
             metrosCubicosGastos =  int(ca) - int(uc)
             valorPagar = metrosCubicosGastos * 6      # Cada Metro cubico ta saindo a 6 Reais
-
-            hidrometros[matricula.lower()] = {"ultimoConsumo" : ca, "consumoAtual" : ca, "bloqueado" : bl}
             
+            hidrometros[matricula.lower()] = {"ultimoConsumo" : ca, "consumoAtual" : ca, "bloqueado" : bl, "vazando" : va}
+
             #Salvar alterações do hidrometro no banco
             with open("../banco/hidrometros.json", 'w' , encoding='utf-8') as database:
                     json.dump(hidrometros, database, indent=4)  
@@ -239,7 +245,7 @@ class Api:
     # Metodos Hidrometro
 
 
-    def PUT_NovoConsumoTotal(self, matricula, novoConsumo):
+    def PUT_NovoConsumoTotal(self, matricula, novoConsumo, vazando):
         # Mandar os dados de consumo para o banco
         try:
             # Pegar dados do banco
@@ -249,7 +255,7 @@ class Api:
             # bloquar hidrometro
             uc = str(hidrometros[matricula.lower()]["ultimoConsumo"])
             bl = str(hidrometros[matricula.lower()]["bloqueado"])
-            hidrometros[matricula.lower()] = {"ultimoConsumo" : uc, "consumoAtual" : novoConsumo, "bloqueado" : bl}
+            hidrometros[matricula.lower()] = {"ultimoConsumo" : uc, "consumoAtual" : novoConsumo, "bloqueado" : bl, "vazando" : vazando}
         
             #Salvar alterações no banco
             with open("../banco/hidrometros.json", 'w' , encoding='utf-8') as database:

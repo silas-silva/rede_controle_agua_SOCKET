@@ -90,7 +90,8 @@ def messagesTreatment(client):
                 elif datas['urlContent'] == "/madarDadosHidrometro":
                     mat = datas['bodyContent']["matricula"]
                     novoConsumo = datas['bodyContent']["novoConsumo"]
-                    pagConta = api.PUT_NovoConsumoTotal(mat, novoConsumo)
+                    vazando = datas['bodyContent']["vazamento"]
+                    pagConta = api.PUT_NovoConsumoTotal(mat, novoConsumo, vazando)
                     mandarClient = pagConta
             
             # Resultado da API manda pro broadCast
