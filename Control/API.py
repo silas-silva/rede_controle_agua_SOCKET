@@ -35,7 +35,8 @@ class Api:
         # Verificar se a matricula existe
         if matricula.lower() in hidrometros:
             consumoAtual = hidrometros[matricula.lower()]["consumoAtual"]
-            retorno = '{"Hidrometro" : "Já Existia", "consumoAtual" : "-"}'.replace("-", str(consumoAtual))
+            bloq = hidrometros[matricula.lower()]["bloqueado"]
+            retorno = '{"Hidrometro" : "Já Existia", "consumoAtual" : "-", "bloqueado" : "_"}'.replace("-", str(consumoAtual)).replace("_", str(bloq))
             return json.dumps(retorno) # Retornar validação existente e quanto o hidrometro consumiu até o momento
         
         else:
@@ -50,7 +51,7 @@ class Api:
             self.POST_NovoCliente(matricula)
 
             # Retornar 
-            retorno = '{"Hidrometro" : "Foi Criado", "consumoAtual" : "0"}'  # Consumo atual é 0, pois não foi criado agora
+            retorno = '{"Hidrometro" : "Foi Criado", "consumoAtual" : "0", "bloqueado" : "0"}'  # Consumo atual é 0, pois não foi criado agora
             return json.dumps(retorno) # Retornar validação existente e quanto o hidrometro consumiu até o momento
     
 
@@ -257,7 +258,7 @@ class Api:
             # Chamar função para gerar boleto do dono do hidrometro.
             self.GET_GerarBoleto(matricula)  
             
-            retorno = '{ "hidroEstado" : "-" }'.replace("-",bl)
+            retorno = '{ "bloqueado" : "-" }'.replace("-",bl)
             return json.dumps(retorno)
         except:
             return json.dumps('{ "validar" : "False" }')

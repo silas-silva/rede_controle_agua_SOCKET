@@ -57,9 +57,19 @@ def validarHidrometro(client):
     # ResponseServer é o retorno com os dados do Hidrometro, e vai ser um Json
     responseServer = client.recv(2048).decode(FORMAT)
     
-    print(json.loads(responseServer))
-        
- 
+    # Apenas com um json.loads não ta transformando em objeto, tive que colocar 2
+    responseServer = json.loads(responseServer)
+    responseServer = json.loads(responseServer)
+
+    hidro.consumo = int(responseServer["consumoAtual"])
+
+    if responseServer["bloqueado"] == "1":
+        hidro.bloqueado = True
+        hidro.vazao = 0
+
+
+
+
 
 
 def receiveMessages(client):
@@ -68,7 +78,7 @@ def receiveMessages(client):
         try:
             msg = client.recv(2048).decode(FORMAT)
             # hidroEstado
-            #{"validar" : "Existe", "consumoAtual" : "-"}
+            #{"validar" : "Existe", "consumoAtual" : "-", "bloqueado" : "0"}
             print(msg + '\n')
             #Controlar Hidrometro por aqui
 
@@ -85,7 +95,7 @@ def sendMessages(client, userName):
         try:
             #Fazer Menu de controle do Hidrometro aqui
             # Sleep para esperar um tempo para receber a resposta do Receive Messages
-            sleep(2)
+            sleep(0.5)
             print("===============  MENU  ===================")
             print(f" ===== CONSUMO TOTAL {hidro.consumo} M³ ======")
             print(f" ===== VAZÃO ATUAL {hidro.vazao} M³/S ======")
