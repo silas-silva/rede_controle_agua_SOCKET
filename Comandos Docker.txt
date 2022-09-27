@@ -1,0 +1,64 @@
+#Comandos Docker
+
+# Comandos Meu projeto
+    # Servidor
+        docker build -t server-image -f Dockerfile .
+        docker run -p 8080:8080 --network bridge --name server-container server-image
+        docker start server-container
+    # Adm
+        docker build -t adm-image -f Dockerfile .
+        docker run -p 8080:8080 --network bridge --name adm-container adm-image
+    # Cliente
+        docker build -t cliente-image -f Dockerfile .
+        docker run -p 8080:8080 --name cliente-container cliente-image
+    # Hidrometro
+        docker build -t hidrometro-image -f Dockerfile .
+        docker run -p 8080:8080 --name hidrometro-container hidrometro-image
+
+
+
+
+
+
+# Criar Imagem
+docker build -t <Nome Imagem> -f Dockerfile .
+
+# Criar Container com Imagem 
+docker run -p <Porta Host>:<Porta Container> --name <Nome Container> <Nome Imagem>
+
+    # Rodar em Backgrund
+    docker run -d -p <Porta Host>:<Porta Container> --name <Nome Container> <Nome Imagem>
+
+    # Escolher tipo de rede
+    docker run -p --network <host, bridge, none> <Porta Host>:<Porta Container> --name <Nome Container> <Nome Imagem>
+
+    # Com variavel de ambiente
+    docker run -it --network=host -p 8080:8080 --name <Nome Container> <Nome Imagem>
+
+
+
+#Parar Docker
+docker stop <Nome Container>
+
+#Inicar Docker 
+docker start <Nome Container>
+
+
+
+# Listar Imagens
+docker images
+
+# Deletar imagens Docker
+docker rmi <Id ou Nome> -f
+
+# Listar containers 
+docker container list -a
+
+# Deletar Containers
+docker rm <Id ou Nome> -f
+
+# Listar redes
+docker network ls
+
+# Ver Dockers em uma rede
+docker network inspect <rede>

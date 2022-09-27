@@ -3,9 +3,9 @@ import socket
 import json
 from API import Api
 
-PORT = 8080
 FORMAT = 'utf-8'
-HOST = "localhost"
+HOST = "172.17.0.0"
+PORT = 8080
 
 clients = []
 
@@ -109,6 +109,9 @@ def broadcast(msg, client):
         #if clientItem != client:
         if clientItem == client:
             try:
+                print("================= Servidor ==========================")
+                print(msg)
+                print("=====================================================")
                 clientItem.send(msg.encode(FORMAT))
             except:
                 deleteClient(clientItem)

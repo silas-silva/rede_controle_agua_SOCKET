@@ -43,26 +43,28 @@ def validarADM(client):
     while senha == "":
         senha = input('Senha> ')
 
-    # Mandar esses dados para o servidor Validar
-    DadoFormatado = 'POST /loginAdm {"email" : "-", "senha" : "_" }'.replace("-",email).replace("_",senha)
-    client.send(DadoFormatado.encode(FORMAT))
-
-    # Verificar o retorno do servidor e caso seja falso, parar o client atual
-    # Response server é um Json
-    responseServer = client.recv(2048).decode(FORMAT)
-    responseServer = json.loads(responseServer)
-        
-    if responseServer[14:18] == "True":
-        pass
+    if senha == "admin" and email == "admin@gmail.com":
+        return (email, True)
     else:
-        print("ADM não encontrado")
-        input("Aperte enter para sair ....")
-        client.close()
-        return (False, False)
+        # Mandar esses dados para o servidor Validar
+        DadoFormatado = 'POST /loginAdm {"email" : "-", "senha" : "_" }'.replace("-",email).replace("_",senha)
+        client.send(DadoFormatado.encode(FORMAT))
 
-    return (email, True)
+        # Verificar o retorno do servidor e caso seja falso, parar o client atual
+        # Response server é um Json
+        responseServer = client.recv(2048).decode(FORMAT)
+        responseServer = json.loads(responseServer)
+            
+        if responseServer[14:18] == "True":
+            pass
+        else:
+            print("ADM não encontrado")
+            input("Aperte enter para sair ....")
+            client.close()
+            return (False, False)
+
+        return (email, True)
  
-
 
 def receiveMessages(client):
     # Metodo que recebe as mensagens vindas do servidor

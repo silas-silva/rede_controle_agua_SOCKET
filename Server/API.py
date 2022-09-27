@@ -11,9 +11,12 @@ class Api:
     def POST_LoginAdm(self, email, senha):
         # Passado o Email e senha, retorna se o adm existe
         # Ler arquivo
-        with open("../banco/adms.json", 'r' , encoding='utf-8') as database:
+        with open("banco/adms.json", 'r' , encoding='utf-8') as database:
             adms = json.load(database)
         
+        print("====================== ADM ==========================")
+        print(adms)
+        print("=====================================================")
 
         # Verificar se o email existe
         if email.lower() in adms:
@@ -29,7 +32,7 @@ class Api:
     def POST_LoginHidrometro(self, matricula):
         # Ler dados do banco
        
-        with open("../banco/hidrometros.json", 'r' , encoding='utf-8') as database:
+        with open("banco/hidrometros.json", 'r' , encoding='utf-8') as database:
             hidrometros = json.load(database)
         
         # Verificar se a matricula existe
@@ -44,7 +47,7 @@ class Api:
             hidrometros[matricula.lower()] = {"ultimoConsumo" : "0", "consumoAtual" : "0", "bloqueado" : "0", "vazando" : "0"}
             
             #Salvar alterações no banco
-            with open("../banco/hidrometros.json", 'w' , encoding='utf-8') as database:
+            with open("banco/hidrometros.json", 'w' , encoding='utf-8') as database:
                 json.dump(hidrometros, database, indent=4)   
             
             # adicionar Cliente
@@ -58,7 +61,7 @@ class Api:
     def POST_LoginCliente(self, matricula):
         # Ler dados do banco
        
-        with open("../banco/clientes.json", 'r' , encoding='utf-8') as database:
+        with open("banco/clientes.json", 'r' , encoding='utf-8') as database:
             clientes = json.load(database)
         
         # Verificar se a matricula existe
@@ -77,7 +80,7 @@ class Api:
         
         try:
             # Pegar dados do banco
-            with open("../banco/clientes.json", 'r' , encoding='utf-8') as database:
+            with open("banco/clientes.json", 'r' , encoding='utf-8') as database:
                 clientes = json.load(database)
             
             jsonMandar = '{ "Clientes" : '
@@ -97,10 +100,10 @@ class Api:
         # Com a matricula do cliente, vai retornar os dados do mesmo
         try:
             # Pegar dados do banco
-            with open("../banco/clientes.json", 'r' , encoding='utf-8') as database:
+            with open("banco/clientes.json", 'r' , encoding='utf-8') as database:
                 clientes = json.load(database)
 
-            with open("../banco/hidrometros.json", 'r' , encoding='utf-8') as database:
+            with open("banco/hidrometros.json", 'r' , encoding='utf-8') as database:
                 hidrometros = json.load(database)
 
             if matricula in clientes:
@@ -122,7 +125,7 @@ class Api:
         #
         try:
             # Pegar dados do banco
-            with open("../banco/hidrometros.json", 'r' , encoding='utf-8') as database:
+            with open("banco/hidrometros.json", 'r' , encoding='utf-8') as database:
                 hidrometros = json.load(database)
             
             if matricula in hidrometros:
@@ -133,7 +136,7 @@ class Api:
                 hidrometros[matricula.lower()] = {"ultimoConsumo" : uc, "consumoAtual" : ca, "bloqueado" : "1", "vazando" : va}
             
                 #Salvar alterações no banco
-                with open("../banco/hidrometros.json", 'w' , encoding='utf-8') as database:
+                with open("banco/hidrometros.json", 'w' , encoding='utf-8') as database:
                     json.dump(hidrometros, database, indent=4)  
                 return json.dumps('{ "validar" : "True" , "bloqueado" : "1" }')
             else:
@@ -146,7 +149,7 @@ class Api:
         # Mandar um dado para tirar block para o hidrometro do cliente, tratar no servidor para mandar apenas para o cliente especifico
         try:
             # Pegar dados do banco
-            with open("../banco/hidrometros.json", 'r' , encoding='utf-8') as database:
+            with open("banco/hidrometros.json", 'r' , encoding='utf-8') as database:
                 hidrometros = json.load(database)
 
             if matricula in hidrometros:
@@ -157,7 +160,7 @@ class Api:
                 hidrometros[matricula.lower()] = {"ultimoConsumo" : uc, "consumoAtual" : ca, "bloqueado" : "0", "vazando" : va}
             
                 #Salvar alterações no banco
-                with open("../banco/hidrometros.json", 'w' , encoding='utf-8') as database:
+                with open("banco/hidrometros.json", 'w' , encoding='utf-8') as database:
                     json.dump(hidrometros, database, indent=4)  
                 return json.dumps('{ "validar" : "True" , "bloqueado" : "0" }')
             else:
@@ -173,20 +176,20 @@ class Api:
         # Criar novo cliente ao ser criado um hidrometro
         # Ler dados do banco
        
-        with open("../banco/clientes.json", 'r' , encoding='utf-8') as database:
+        with open("banco/clientes.json", 'r' , encoding='utf-8') as database:
             clientes = json.load(database)
         
         # Adicionar novo cliente
         clientes[matricula.lower()] = {"divida" : "0"}
         
         #Salvar alterações no banco
-        with open("../banco/clientes.json", 'w' , encoding='utf-8') as database:
+        with open("banco/clientes.json", 'w' , encoding='utf-8') as database:
             json.dump(clientes, database, indent=4)   
 
 
     def GET_GerarBoleto(self, matricula):
         # Fazez consulta no banco, e gerar conta para o cliente
-        with open("../banco/clientes.json", 'r' , encoding='utf-8') as database:
+        with open("banco/clientes.json", 'r' , encoding='utf-8') as database:
             clientes = json.load(database)
         
         # Verificar se o Cliente já tem divida, se sim, retornar a divida dele atual.
@@ -196,7 +199,7 @@ class Api:
         else:
             # Jogar para ultimo consumo o dado de consumo atual do hidrometro e colocar divida no cliente
             # Pegar dados do banco
-            with open("../banco/hidrometros.json", 'r' , encoding='utf-8') as database:
+            with open("banco/hidrometros.json", 'r' , encoding='utf-8') as database:
                 hidrometros = json.load(database)
             
             # atualizar o Ultimo consumo atual e gerar conta
@@ -211,14 +214,14 @@ class Api:
             hidrometros[matricula.lower()] = {"ultimoConsumo" : ca, "consumoAtual" : ca, "bloqueado" : bl, "vazando" : va}
 
             #Salvar alterações do hidrometro no banco
-            with open("../banco/hidrometros.json", 'w' , encoding='utf-8') as database:
+            with open("banco/hidrometros.json", 'w' , encoding='utf-8') as database:
                     json.dump(hidrometros, database, indent=4)  
             
 
             #Atualizar divida no cliente e salvar
             clientes[matricula.lower()] = {"divida" : str(valorPagar)}
 
-            with open("../banco/clientes.json", 'w' , encoding='utf-8') as database:
+            with open("banco/clientes.json", 'w' , encoding='utf-8') as database:
                     json.dump(clientes, database, indent=4)  
 
             return json.dumps(clientes[matricula])
@@ -229,14 +232,14 @@ class Api:
         self.PUT_DesbloquearHidrometro(matricula)
         
         #Abrir database de clientes
-        with open("../banco/clientes.json", 'r' , encoding='utf-8') as database:
+        with open("banco/clientes.json", 'r' , encoding='utf-8') as database:
             clientes = json.load(database)
 
         # zerar a divida
         clientes[matricula.lower()] = {"divida" : "0"}
         
         #Salvar alterações no banco
-        with open("../banco/clientes.json", 'w' , encoding='utf-8') as database:
+        with open("banco/clientes.json", 'w' , encoding='utf-8') as database:
             json.dump(clientes, database, indent=4)  
         
         return json.dumps('{"conta": "paga"}')
@@ -249,7 +252,7 @@ class Api:
         # Mandar os dados de consumo para o banco
         try:
             # Pegar dados do banco
-            with open("../banco/hidrometros.json", 'r' , encoding='utf-8') as database:
+            with open("banco/hidrometros.json", 'r' , encoding='utf-8') as database:
                 hidrometros = json.load(database)
 
             # bloquar hidrometro
@@ -258,7 +261,7 @@ class Api:
             hidrometros[matricula.lower()] = {"ultimoConsumo" : uc, "consumoAtual" : novoConsumo, "bloqueado" : bl, "vazando" : vazando}
         
             #Salvar alterações no banco
-            with open("../banco/hidrometros.json", 'w' , encoding='utf-8') as database:
+            with open("banco/hidrometros.json", 'w' , encoding='utf-8') as database:
                 json.dump(hidrometros, database, indent=4)  
 
             # Chamar função para gerar boleto do dono do hidrometro.
