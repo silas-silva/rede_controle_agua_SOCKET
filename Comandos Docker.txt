@@ -2,8 +2,8 @@
 
 # Comandos Meu projeto
     # Servidor
-        docker build -t server-image -f Dockerfile .
-        docker run -p 8080:8080 --network bridge --name server-container server-image
+        docker build --rm -t server-image -f Dockerfile .
+        docker run -t -p 8080:8080 --name server-container server-image
         docker start server-container
     # Adm
         docker build -t adm-image -f Dockerfile .

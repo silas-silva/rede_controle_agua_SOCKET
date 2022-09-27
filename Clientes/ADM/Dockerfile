@@ -1,4 +1,5 @@
 FROM python:3
-COPY . /ClienteAdm
-WORKDIR /ClienteAdm
-CMD python adm.py
+WORKDIR / app
+COPY  . .
+CMD [ "adm.py" ]
+ENTRYPOINT ["python3"]

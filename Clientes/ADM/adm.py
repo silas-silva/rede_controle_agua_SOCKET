@@ -3,9 +3,9 @@ import threading
 import socket
 from time import sleep
 
-PORT = 8080
 FORMAT = 'utf-8'
-HOST = "localhost"
+HOST = "127.0.0.1"
+PORT = 8080
 
 
 def main():
@@ -21,7 +21,7 @@ def main():
     validado = email_validacao[1]
 
     if validado == True:
-        print('\nConectado')
+        print('\nConectado\n')
         thread1 = threading.Thread(target=receiveMessages, args=[client])
         thread2 = threading.Thread(target=sendMessages, args=[client, email])
         thread1.start()
@@ -88,7 +88,7 @@ def sendMessages(client, userName):
         try:
             #Fazer Menu de controle do Hidrometro aqui
             # Sleep para esperar um tempo para receber a resposta do Receive Messages
-            sleep(2)
+            sleep(1)
             print("===============  MENU  ===================")
             print("[ 1 ] LISTAR CLIENTES")
             print("[ 2 ] PEGAR DADOS DE UM CLIENTE")

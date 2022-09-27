@@ -4,7 +4,7 @@ import json
 from API import Api
 
 FORMAT = 'utf-8'
-HOST = "172.17.0.0"
+HOST = ""
 PORT = 8080
 
 clients = []
@@ -12,19 +12,19 @@ clients = []
 
 def main():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
     try:
         server.bind((HOST, PORT))
         server.listen()   # Se passar listen(10), esse parametro é o numero de conexões permitidas, sem nada não tem limite
+        print("")
+        print(" -- Servidor Online --")
+        print("")
     except:
         return print('\nNão foi possivel iniciar o servidor!\n')
 
     while True:
         client, adress = server.accept()
         clients.append(client)
-
         thread = threading.Thread(target=messagesTreatment, args=[client])
-
         thread.start()
 
 
@@ -109,9 +109,6 @@ def broadcast(msg, client):
         #if clientItem != client:
         if clientItem == client:
             try:
-                print("================= Servidor ==========================")
-                print(msg)
-                print("=====================================================")
                 clientItem.send(msg.encode(FORMAT))
             except:
                 deleteClient(clientItem)

@@ -13,10 +13,6 @@ class Api:
         # Ler arquivo
         with open("banco/adms.json", 'r' , encoding='utf-8') as database:
             adms = json.load(database)
-        
-        print("====================== ADM ==========================")
-        print(adms)
-        print("=====================================================")
 
         # Verificar se o email existe
         if email.lower() in adms:
