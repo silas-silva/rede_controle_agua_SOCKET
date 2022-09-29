@@ -5,10 +5,11 @@ from time import sleep
 
 PORT = 8080
 FORMAT = 'utf-8'
-HOST = "localhost"
+HOST = "172.16.103.8"
 
 
 def main():
+    # Criar o cliente e se conectar com o servidor
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
     try:
@@ -29,9 +30,16 @@ def main():
         thread2.start()
 
 
-
 def validarCliente(client):
-    # metodo para validar se o cliente existe na base de dados
+    """ metodo para validar se o cliente existe na base de dados
+
+        Args:
+            client: objeto de conexão do cliente
+        
+        Returns:
+            Json: Json contendo a matricula e um boolean se o cliente existe
+    """
+
     # Pedir matricula
     print("===== Cliente =====")
     matricula = input('Matricula> ')
@@ -59,8 +67,12 @@ def validarCliente(client):
     return (matricula, True)
  
 
-
 def receiveMessages(client):
+    """ Metodo que recebe as mensagens vindas do servidor
+
+        Args:
+            client: objeto de conexão do adm
+    """
     # Metodo que recebe as mensagens vindas do servidor
     while True:
         try:
@@ -77,6 +89,12 @@ def receiveMessages(client):
 
 
 def sendMessages(client, matricula):
+    """ metodo para enviar mensagem para o servidor
+
+        Args:
+            matricula (str): matricula do cliente
+            client: objeto de conexão do cliente
+    """
     while True:
         try:
             #Fazer Menu de controle do Cliente aqui

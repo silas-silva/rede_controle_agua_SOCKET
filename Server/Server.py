@@ -4,15 +4,16 @@ import json
 from API import Api
 
 FORMAT = 'utf-8'
-HOST = ""
+HOST = "172.16.103.8"
 PORT = 8080
 
 clients = []
 
 
 def main():
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Inicar server e esperar conexões
     try:
+        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         server.bind((HOST, PORT))
         server.listen()   # Se passar listen(10), esse parametro é o numero de conexões permitidas, sem nada não tem limite
         print("")
@@ -105,6 +106,12 @@ def messagesTreatment(client):
 
 
 def broadcast(msg, client):
+    """Mandar mensagens para os clientes
+
+        Args:
+            msg (str): Mensagem que o client mandou
+            client : Cliente
+    """
     for clientItem in clients:
         #if clientItem != client:
         if clientItem == client:
@@ -115,21 +122,33 @@ def broadcast(msg, client):
                 
 
 def deleteClient(client):
+    """ Deletar Cliente
+
+        Args:
+            client: cliente que se conectou
+    """
     clients.remove(client)
 
 
 def getDataMsg(msg):
-    """
-        Metodo para divir as informações que vem na requisição e retornar apenas,
+    """ Metodo para divir as informações que vem na requisição e retornar apenas,
         o metodo da requisição ou o verbo HTTP usado
         o conteudo da URL
         o conteudo em Json 
+
+        Args:
+            Client : cliente conectado
+        
+        Returns:
+            Json: Json com o verbo HTTP, A URL e o Conteudo json do corpo da mensagem
     """
+
     method = msg.split(" ")[0]
     urlContent = msg.split(" ")[1]
     bodyContent = ""
    
     try:    
+        # Preparar msg
         msg = msg.replace("{","{dir") 
         msg = msg.replace("}","esq}")
         msg = msg.split("{")[1].split("}")[0]

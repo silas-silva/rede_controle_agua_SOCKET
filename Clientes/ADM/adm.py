@@ -4,7 +4,7 @@ import socket
 from time import sleep
 
 FORMAT = 'utf-8'
-HOST = "127.0.0.1"
+HOST = "172.16.103.8"
 PORT = 8080
 
 
@@ -28,9 +28,16 @@ def main():
         thread2.start()
 
 
-
 def validarADM(client):
-    # metodo para validar se o adm existe na base de dados
+    """ metodo para validar se o adm existe na base de dados
+
+        Args:
+            client: objeto de conexão do adm
+        
+        Returns:
+            Json: Json contendo o email e um boolean se o adm existe
+    """
+    
     # Pedir email e senha para o adm
     print("===== ADM =====")
     email = input('Email> ')
@@ -67,15 +74,19 @@ def validarADM(client):
  
 
 def receiveMessages(client):
-    # Metodo que recebe as mensagens vindas do servidor
+    """ Metodo que recebe as mensagens vindas do servidor
+
+        Args:
+            client: objeto de conexão do adm
+    """
+    
+    # Decodificar a mensagem e transformar em Json
     while True:
         try:
             msg = client.recv(2048).decode(FORMAT)
             msg = json.loads(msg)
             print(msg + '\n')
-            #Controlar Hidrometro por aqui
 
-            # Fazer Opção de bloquear o hidrometro pelo dado vindo do servidor
         except:
             print('\nNão foi possivel permanecer conectado no servidor\n')
             print('Digite o número < 1 > e Pressione <Enter> para continuar')
@@ -83,10 +94,16 @@ def receiveMessages(client):
             break
 
 
-def sendMessages(client, userName):
+def sendMessages(client, email):
+    """ metodo para enviar mensagem para o servidor
+
+        Args:
+            email (str): email do adm
+            client: objeto de conexão do adm
+    """
     while True:
         try:
-            #Fazer Menu de controle do Hidrometro aqui
+            #Menu de controle para o adm
             # Sleep para esperar um tempo para receber a resposta do Receive Messages
             sleep(1)
             print("===============  MENU  ===================")
@@ -100,9 +117,9 @@ def sendMessages(client, userName):
                 escolha = input("... ") 
 
 
-
             requisicao = ""
-
+            
+            # Criar a requisição com o verbo HTTP e o link
             if escolha == "1":
                 requisicao = f'GET /clientes'
             elif escolha == "2":

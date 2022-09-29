@@ -9,7 +9,15 @@ class Api:
 
 
     def POST_LoginAdm(self, email, senha):
-        # Passado o Email e senha, retorna se o adm existe
+        """ Rota POST que verifica se o adm existe na base de dados
+
+            Args:
+                email (str): email do adm
+                senha (str): senha do adm
+            
+            Returns:
+                Json: Json contendo informações se o usuario existe ou não
+        """
         # Ler arquivo
         with open("banco/adms.json", 'r' , encoding='utf-8') as database:
             adms = json.load(database)
@@ -26,8 +34,16 @@ class Api:
 
 
     def POST_LoginHidrometro(self, matricula):
+        """Rota post que verifica se o hidrometro já existe na base de dados
+
+            Args:
+                matricula (str): matricula do hidrometro
+            
+            Returns:
+                Json: Json contendo informações do Hidrometro, se já existia, se está bloqueado, consumo atual, etc...
+        """
+        
         # Ler dados do banco
-       
         with open("banco/hidrometros.json", 'r' , encoding='utf-8') as database:
             hidrometros = json.load(database)
         
@@ -55,8 +71,16 @@ class Api:
     
 
     def POST_LoginCliente(self, matricula):
+        """ rota POST que verifica se o cliente já existe na base de dados
+
+            Args:
+                matricula (str): matricula do cliente
+            
+            Returns:
+                Json: Json contendo informações se o usuario existe ou não
+        """
+
         # Ler dados do banco
-       
         with open("banco/clientes.json", 'r' , encoding='utf-8') as database:
             clientes = json.load(database)
         
@@ -72,15 +96,21 @@ class Api:
 
 
     def GET_ListaClientes(self):
-        # Retornar matriculas dos clientes
+        """ Rota GET para listar clientes
+        
+            Returns:
+                Json: Json contendo todas as matriculas de clientes cadastrados
+        """
         
         try:
             # Pegar dados do banco
             with open("banco/clientes.json", 'r' , encoding='utf-8') as database:
                 clientes = json.load(database)
             
+            # Criar String com formato Json
             jsonMandar = '{ "Clientes" : '
 
+            # Colocar as matriculas do cliente na string de json
             for v , k in clientes.items():
                 jsonMandar += f' "{v}",'
 
@@ -93,7 +123,14 @@ class Api:
         
         
     def GET_UnicoCliente(self, matricula):
-        # Com a matricula do cliente, vai retornar os dados do mesmo
+        """ Rota GET que retorna dados de um cliente especifico
+
+            Args:
+                matricula (str): matricula do cliente
+            
+            Returns:
+                Json: Json contendo informações de um cliente
+        """
         try:
             # Pegar dados do banco
             with open("banco/clientes.json", 'r' , encoding='utf-8') as database:
@@ -102,6 +139,7 @@ class Api:
             with open("banco/hidrometros.json", 'r' , encoding='utf-8') as database:
                 hidrometros = json.load(database)
 
+            # Pegar os dados de divida e vazamento de um cliente e seu hidrometro
             if matricula in clientes:
                 divida = clientes[matricula]["divida"]
                 retorno = '{"validar" : "True", "Divida" : "-", "vazando" : "_" }'.replace("-", str(divida)).replace("_", hidrometros[matricula]["vazando"])
@@ -114,21 +152,27 @@ class Api:
 
 
     def PUT_BloquearHidrometro(self, matricula):
-        # Mandar um dado de block para o hidrometro do cliente, tratar no servidor para mandar apenas para o cliente especifico
-        
-        #
-        # Fazer uma validação para ver se o cliente deve
-        #
+        """ Rota PUT que bloqueia um hidrometro
+
+            Args:
+                matricula (str): matricula associada ao hidrometro
+            
+            Returns:
+                Json: Json contendo informações de bloqueio do hidrometro
+        """
         try:
             # Pegar dados do banco
             with open("banco/hidrometros.json", 'r' , encoding='utf-8') as database:
                 hidrometros = json.load(database)
             
+            # Verificar se o hidrometro existe
             if matricula in hidrometros:
                 # bloquar hidrometro
                 uc = str(hidrometros[matricula.lower()]["ultimoConsumo"])
                 ca = str(hidrometros[matricula.lower()]["consumoAtual"])
                 va = str(hidrometros[matricula.lower()]["vazando"])
+                
+                # Mudar bloqueio para 1
                 hidrometros[matricula.lower()] = {"ultimoConsumo" : uc, "consumoAtual" : ca, "bloqueado" : "1", "vazando" : va}
             
                 #Salvar alterações no banco
@@ -142,17 +186,28 @@ class Api:
 
 
     def PUT_DesbloquearHidrometro(self, matricula):
+        """ Rota PUT que desbloqueia um hidrometro
+
+            Args:
+                matricula (str): matricula associada ao hidrometro
+            
+            Returns:
+                Json: Json contendo informações de bloqueio do hidrometro
+        """
         # Mandar um dado para tirar block para o hidrometro do cliente, tratar no servidor para mandar apenas para o cliente especifico
         try:
             # Pegar dados do banco
             with open("banco/hidrometros.json", 'r' , encoding='utf-8') as database:
                 hidrometros = json.load(database)
-
+            
+            # Verificar se o hidrometro existe
             if matricula in hidrometros:
                 # bloquar hidrometro
                 uc = str(hidrometros[matricula.lower()]["ultimoConsumo"])
                 ca = str(hidrometros[matricula.lower()]["consumoAtual"])
                 va = str(hidrometros[matricula.lower()]["vazando"])
+                
+                # Mudar bloqueio para 2
                 hidrometros[matricula.lower()] = {"ultimoConsumo" : uc, "consumoAtual" : ca, "bloqueado" : "0", "vazando" : va}
             
                 #Salvar alterações no banco
@@ -169,9 +224,16 @@ class Api:
     # Metodos Cliente
 
     def POST_NovoCliente(self, matricula):
+        """ Rota POST que insere um novo cliente no banco
+
+            Args:
+                matricula (str): matricula do cliente
+ 
+        """
+        
         # Criar novo cliente ao ser criado um hidrometro
+        
         # Ler dados do banco
-       
         with open("banco/clientes.json", 'r' , encoding='utf-8') as database:
             clientes = json.load(database)
         
@@ -184,6 +246,15 @@ class Api:
 
 
     def GET_GerarBoleto(self, matricula):
+        """ Rota GET gera o boleto do cliente
+
+            Args:
+                matricula (str): matricula do Cliente
+            
+            Returns:
+                Json: Json contendo informações do cliente
+        """
+        
         # Fazez consulta no banco, e gerar conta para o cliente
         with open("banco/clientes.json", 'r' , encoding='utf-8') as database:
             clientes = json.load(database)
@@ -224,6 +295,14 @@ class Api:
 
     
     def PUT_Pagarconta(self, matricula):
+        """ Rota PUT para pagar conta
+
+            Args:
+                matricula (str): matricula do cliente
+            
+            Returns:
+                Json: Json contendo a informação que a conta foi paga
+        """
         # Desbloquear Hidrometro automaticamente
         self.PUT_DesbloquearHidrometro(matricula)
         
@@ -245,6 +324,16 @@ class Api:
 
 
     def PUT_NovoConsumoTotal(self, matricula, novoConsumo, vazando):
+        """ Rota PUT para mandar os dados de consumo do hidrometro para o banco
+
+            Args:
+                matricula (str): matricula do cliente
+                novoConsumo (str): consumo atual do hidrometro
+                vazando (str): informação se tem vazamento nesse hidrometro 
+            
+            Returns:
+                Json: Json contendo a informação se o hidrometro ta bloqueado ou não 
+        """
         # Mandar os dados de consumo para o banco
         try:
             # Pegar dados do banco

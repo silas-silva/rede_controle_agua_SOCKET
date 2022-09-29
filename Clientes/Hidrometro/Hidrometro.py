@@ -4,16 +4,16 @@ import socket
 import sys
 from time import sleep
 
-sys.path.append('../Model')
 from HidrometroModel import Hidrometro
 
 PORT = 8080
 FORMAT = 'utf-8'
-HOST = "localhost"
+HOST = "172.16.103.8"
 
 hidro = Hidrometro()
 
 def main():
+    # Criar o hidrometro e se conectar com o servidor
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     
     try:
@@ -37,10 +37,15 @@ def main():
     thread3.start()
 
 
-
 def validarHidrometro(client):
-    # Metodo para validar se o hidrometro já existe na base de dados
-    # Se existir, só pegar os dados, se não, criar um
+    """ metodo para validar se o hidrometro já existe na base de dados Se existir, só pegar os dados, se não, criar um
+
+        Args:
+            client: objeto de conexão do hidrometro
+        
+        Returns:
+            Json: Json contendo a matricula e um boolean se o hidrometro existe
+    """
     print("===== Hidrometro =====")
     matricula = input('Matricula> ')
 
@@ -68,11 +73,12 @@ def validarHidrometro(client):
         hidro.vazao = 0
 
 
-
-
-
-
 def receiveMessages(client):
+    """ Metodo que recebe as mensagens vindas do servidor
+
+        Args:
+            client: objeto de conexão do hidrometro
+    """
     # Metodo que recebe as mensagens vindas do servidor
     while True:
         try:
@@ -99,7 +105,13 @@ def receiveMessages(client):
             quit()
 
 
-def sendMessages(client, userName):
+def sendMessages(client, matricula):
+    """ metodo para enviar mensagem para o servidor
+
+        Args:
+            matricula (str): matricula do hidrometro
+            client: objeto de conexão do hidrometro
+    """
     while True:
         try:
             #Fazer Menu de controle do Hidrometro aqui
